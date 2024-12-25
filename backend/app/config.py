@@ -51,5 +51,18 @@ config = {
 
 # Choose the config based on the FLASK_ENV variable
 def get_config():
-    env = os.getenv('FLASK_ENV', 'default')
+    """
+    Get the appropriate configuration class based on the FLASK_ENV environment variable.
+
+    Returns:
+        Config: The configuration class for the current environment.
+    """
+    env = os.getenv('FLASK_ENV', 'default').lower()
     return config.get(env, Config)
+
+# Example usage of the configuration
+if __name__ == "__main__":
+    current_config = get_config()
+    print(f"Using configuration: {current_config.__name__}")
+    print(f"Debug mode: {current_config.DEBUG}")
+    print(f"Database URI: {current_config.SQLALCHEMY_DATABASE_URI}")
