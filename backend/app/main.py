@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from app.routers import prediction, maintenance
 from app.config import get_config
 from app.database import initialize_db  # Assuming you have a database module for setup
@@ -26,29 +27,42 @@ app.add_middleware(
 # Initialize database if necessary
 @app.on_event("startup")
 async def startup_event():
-    # Initialize database connection and tables if needed
+    """
+    Event triggered at app startup. Use it for tasks like database initialization.
+    """
     initialize_db()
 
 # Include prediction and maintenance routers
-app.include_router(prediction.router)
-app.include_router(maintenance.router)
+app.include_router(prediction.router, prefix="/api/prediction", tags=["Prediction"])
+app.include_router(maintenance.router, prefix="/api/maintenance", tags=["Maintenance"])
 
 # Root route
-@app.get("/")
+@app.get("/", tags=["Root"])
 async def root():
+    """
+    Root endpoint with a welcome message.
+    """
     return {"message": "Welcome to PolymerAI!"}
 
 # Health check route
-@app.get("/health")
+@app.get("/health", tags=["Health"])
 async def health_check():
+    """
+    Health check endpoint to verify service availability.
+    """
     return {"status": "healthy"}
 
-# Error handling (optional)
+# Error handling
 @app.exception_handler(404)
-async def not_found_error(request, exc):
-    return {"error": "Not found"}
+async def not_found_error(request: Request, exc):
+    """
+    Custom handler for 404 errors.
+    """
+    return JSONResponse(status_code=404, content={"error": "Resource not found"})
 
 @app.exception_handler(500)
-async def internal_error(request, exc):
-    return {"error": "An internal error occurred"}
-
+async def internal_error(request: Request, exc):
+    """
+    Custom handler for 500 internal server errors.
+    """
+    return JSONResponse(status_code=500, content={"error": "An internal error occurred"})
