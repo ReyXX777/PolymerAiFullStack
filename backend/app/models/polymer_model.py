@@ -22,7 +22,7 @@ def mock_polymer_prediction(structure: str, additives: list[str], temperature: f
     # Simulate some random behavior based on input values to mimic a real model
     base_temp_adjustment = (len(additives) * 0.1) + (temperature * 0.01)
     strength_factor = 1 + len(structure) * 0.02
-    
+
     glass_transition_temp = random.uniform(100, 500) * (1 + base_temp_adjustment / 100)
     mechanical_strength = random.uniform(50, 300) * strength_factor
     thermal_stability = random.uniform(200, 600) * (1 + base_temp_adjustment / 200)
@@ -32,3 +32,12 @@ def mock_polymer_prediction(structure: str, additives: list[str], temperature: f
         mechanical_strength=round(mechanical_strength, 2),
         thermal_stability=round(thermal_stability, 2)
     )
+
+# Example usage
+if __name__ == "__main__":
+    structure = "C6H12O6"
+    additives = ["Plasticizer", "Stabilizer"]
+    temperature = 150.0
+
+    predicted_properties = mock_polymer_prediction(structure, additives, temperature)
+    print(predicted_properties)
