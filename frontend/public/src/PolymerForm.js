@@ -1,3 +1,46 @@
+// PolymerAiFullStack/frontend/public/src/components/PolymerDashboard.js
+
+import React, { useState } from 'react';
+import PolymerForm from './PolymerForm';
+import PredictionsList from './PredictionsList';
+
+const PolymerDashboard = () => {
+  const [predictions, setPredictions] = useState([]);
+
+  return (
+    <div className="container mt-5">
+      <h1 className="text-center">Polymer AI Predictor</h1>
+      <p className="text-center text-muted">Enter the polymer details below to get property predictions.</p>
+      <PolymerForm setPredictions={setPredictions} />
+      {predictions.length > 0 && <PredictionsList predictions={predictions} />}
+    </div>
+  );
+};
+
+export default PolymerDashboard;
+
+// PolymerAiFullStack/frontend/public/src/components/PredictionsList.js
+
+import React from 'react';
+
+const PredictionsList = ({ predictions }) => {
+  return (
+    <div className="mt-4">
+      <h2>Predicted Properties</h2>
+      <ul className="list-group">
+        {predictions.map((prediction, index) => (
+          <li key={index} className="list-group-item">
+            <strong>Property:</strong> {prediction.property} <br />
+            <strong>Value:</strong> {prediction.value} {prediction.unit}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default PredictionsList;
+
 // PolymerAiFullStack/frontend/public/src/components/PolymerForm.js
 
 import React, { useState } from 'react';
@@ -7,7 +50,7 @@ const PolymerForm = ({ setPredictions }) => {
   const [formData, setFormData] = useState({
     structure: '',
     additives: '',
-    temperature: ''
+    temperature: '',
   });
 
   const handleChange = (e) => {
@@ -20,13 +63,13 @@ const PolymerForm = ({ setPredictions }) => {
     try {
       const response = await axios.post('/predict', {
         structure: formData.structure,
-        additives: formData.additives.split(',').map(item => item.trim()),
-        temperature: parseFloat(formData.temperature)
+        additives: formData.additives.split(',').map((item) => item.trim()),
+        temperature: parseFloat(formData.temperature),
       });
       setPredictions(response.data.predictions);
     } catch (error) {
-      console.error("Error fetching predictions:", error);
-      alert("Failed to fetch predictions. Please check the input and try again.");
+      console.error('Error fetching predictions:', error);
+      alert('Failed to fetch predictions. Please check the input and try again.');
     }
   };
 
