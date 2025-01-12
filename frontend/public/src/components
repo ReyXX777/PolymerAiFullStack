@@ -1,0 +1,82 @@
+// PolymerAiFullStack/frontend/public/src/components/Header.js
+
+import React from "react";
+import { Link } from "react-router-dom";
+
+const Header = () => {
+  return (
+    <header style={styles.header}>
+      <h1 style={styles.logo}>Polymer AI</h1>
+      <nav>
+        <ul style={styles.navList}>
+          <li>
+            <Link to="/" style={styles.navItem}>Home</Link>
+          </li>
+          <li>
+            <Link to="/about" style={styles.navItem}>About</Link>
+          </li>
+          <li>
+            <Link to="/gallery" style={styles.navItem}>Gallery</Link>
+          </li>
+          <li>
+            <Link to="/contact" style={styles.navItem}>Contact</Link>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+};
+
+const styles = {
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+    backgroundColor: "#282c34",
+    color: "#fff",
+  },
+  logo: {
+    fontSize: "24px",
+    fontWeight: "bold",
+  },
+  navList: {
+    display: "flex",
+    listStyleType: "none",
+    margin: 0,
+    padding: 0,
+  },
+  navItem: {
+    color: "#61dafb",
+    textDecoration: "none",
+    margin: "0 10px",
+  },
+};
+
+export default Header;
+
+// PolymerAiFullStack/frontend/public/src/components/Footer.js
+
+import React from "react";
+
+const Footer = () => {
+  return (
+    <footer style={styles.footer}>
+      <p>&copy; {new Date().getFullYear()} Polymer AI. All rights reserved.</p>
+    </footer>
+  );
+};
+
+const styles = {
+  footer: {
+    textAlign: "center",
+    padding: "10px",
+    backgroundColor: "#282c34",
+    color: "#fff",
+    marginTop: "20px",
+  },
+};
+
+export default Footer;
+
+// Commit message: "Add Header and Footer components with basic styling"
