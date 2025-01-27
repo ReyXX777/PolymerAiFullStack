@@ -4,6 +4,8 @@ from fastapi.responses import JSONResponse
 from app.routers import prediction, maintenance
 from app.config import get_config
 from app.database import initialize_db  # Assuming you have a database module for setup
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 
 # Initialize app with settings
 app = FastAPI(
@@ -23,6 +25,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Redirect HTTP to HTTPS in production
+if config.ENV == "production":
+    app.add_middleware(HTTPSRedirectMiddleware)
+
+# Serve static files (e.g., docs, assets)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Initialize database if necessary
 @app.on_event("startup")
@@ -66,3 +75,13 @@ async def internal_error(request: Request, exc):
     Custom handler for 500 internal server errors.
     """
     return JSONResponse(status_code=500, content={"error": "An internal error occurred"})
+
+# Custom middleware for logging requests
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """
+    Middleware to log incoming requests.
+    """
+    print(f"Incoming request: {request.method} {request.url}")
+    response = await call_next(request)
+    return response
