@@ -1,7 +1,55 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.polymer import PolymerInput, PolymerProperties  # Ensure PolymerProperties is defined in your schema
-from app.services.prediction_service import predict_properties
+from pydantic import BaseModel
+from typing import List, Optional
+import random
 
+# Define schemas
+class PolymerInput(BaseModel):
+    structure: str
+    additives: List[str]
+    temperature: float
+
+class PolymerProperties(BaseModel):
+    glass_transition_temp: float
+    mechanical_strength: float
+    thermal_stability: float
+    density: Optional[float] = None  # Added new property: density
+    electrical_conductivity: Optional[float] = None  # Added new property: electrical conductivity
+
+# Mock prediction service
+def predict_properties(polymer_input: PolymerInput) -> PolymerProperties:
+    """
+    Mock function to simulate polymer property predictions based on input parameters.
+
+    Args:
+        polymer_input (PolymerInput): Input data including structure, additives, and temperature.
+
+    Returns:
+        PolymerProperties: Predicted polymer properties.
+    """
+    structure = polymer_input.structure
+    additives = polymer_input.additives
+    temperature = polymer_input.temperature
+
+    # Simulate some random behavior based on input values to mimic a real model
+    base_temp_adjustment = (len(additives) * 0.1) + (temperature * 0.01)
+    strength_factor = 1 + len(structure) * 0.02
+
+    glass_transition_temp = random.uniform(100, 500) * (1 + base_temp_adjustment / 100)
+    mechanical_strength = random.uniform(50, 300) * strength_factor
+    thermal_stability = random.uniform(200, 600) * (1 + base_temp_adjustment / 200)
+    density = random.uniform(0.9, 1.5)  # Simulated density prediction
+    electrical_conductivity = random.uniform(0.01, 1.0)  # Simulated electrical conductivity prediction
+
+    return PolymerProperties(
+        glass_transition_temp=round(glass_transition_temp, 2),
+        mechanical_strength=round(mechanical_strength, 2),
+        thermal_stability=round(thermal_stability, 2),
+        density=round(density, 2),
+        electrical_conductivity=round(electrical_conductivity, 2)
+    )
+
+# FastAPI router
 router = APIRouter()
 
 @router.post("/predict/", response_model=PolymerProperties)
