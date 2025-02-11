@@ -8,8 +8,13 @@ class PolymerProperties(BaseModel):
     glass_transition_temp: float
     mechanical_strength: float
     thermal_stability: float
-    density: Optional[float] = None  # Added new property: density
-    electrical_conductivity: Optional[float] = None  # Added new property: electrical conductivity
+    density: Optional[float] = None
+    electrical_conductivity: Optional[float] = None
+    molecular_weight: Optional[float] = None  # Added new property: molecular weight
+    crystallinity: Optional[float] = None  # Added new property: crystallinity
+    solubility: Optional[float] = None  # Added new property: solubility
+    viscosity: Optional[float] = None  # Added new property: viscosity
+    biodegradability: Optional[float] = None  # Added new property: biodegradability
 
 def mock_polymer_prediction(structure: str, additives: list[str], temperature: float) -> PolymerProperties:
     """
@@ -30,15 +35,25 @@ def mock_polymer_prediction(structure: str, additives: list[str], temperature: f
     glass_transition_temp = random.uniform(100, 500) * (1 + base_temp_adjustment / 100)
     mechanical_strength = random.uniform(50, 300) * strength_factor
     thermal_stability = random.uniform(200, 600) * (1 + base_temp_adjustment / 200)
-    density = random.uniform(0.9, 1.5)  # Simulated density prediction
-    electrical_conductivity = random.uniform(0.01, 1.0)  # Simulated electrical conductivity prediction
+    density = random.uniform(0.9, 1.5)
+    electrical_conductivity = random.uniform(0.01, 1.0)
+    molecular_weight = random.uniform(1000, 100000)  # Simulated molecular weight prediction
+    crystallinity = random.uniform(0, 100)  # Simulated crystallinity prediction
+    solubility = random.uniform(0, 1)  # Simulated solubility prediction
+    viscosity = random.uniform(100, 10000)  # Simulated viscosity prediction
+    biodegradability = random.uniform(0, 100)  # Simulated biodegradability prediction
 
     return PolymerProperties(
         glass_transition_temp=round(glass_transition_temp, 2),
         mechanical_strength=round(mechanical_strength, 2),
         thermal_stability=round(thermal_stability, 2),
         density=round(density, 2),
-        electrical_conductivity=round(electrical_conductivity, 2)
+        electrical_conductivity=round(electrical_conductivity, 2),
+        molecular_weight=round(molecular_weight, 2),
+        crystallinity=round(crystallinity, 2),
+        solubility=round(solubility, 2),
+        viscosity=round(viscosity, 2),
+        biodegradability=round(biodegradability, 2)
     )
 
 def save_prediction_to_file(prediction: PolymerProperties, filename: str = "polymer_prediction.txt"):
@@ -56,6 +71,11 @@ def save_prediction_to_file(prediction: PolymerProperties, filename: str = "poly
         file.write(f"Thermal Stability: {prediction.thermal_stability} K\n")
         file.write(f"Density: {prediction.density} g/cm³\n")
         file.write(f"Electrical Conductivity: {prediction.electrical_conductivity} S/m\n")
+        file.write(f"Molecular Weight: {prediction.molecular_weight} g/mol\n")
+        file.write(f"Crystallinity: {prediction.crystallinity} %\n")
+        file.write(f"Solubility: {prediction.solubility} g/L\n")
+        file.write(f"Viscosity: {prediction.viscosity} cP\n")
+        file.write(f"Biodegradability: {prediction.biodegradability} %\n")
         file.write("\n")
 
 # Example usage
